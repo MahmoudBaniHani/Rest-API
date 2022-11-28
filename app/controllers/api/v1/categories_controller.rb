@@ -1,6 +1,6 @@
 module Api
   module V1
-    class CategoryController < ApplicationController
+    class CategoriesController < ApplicationController
       before_action :set_category , only: [:show,:edit,:update,:destroy]
       def index
         # category = Category.order('created_at ASC')
@@ -16,8 +16,10 @@ module Api
       def show
         render json: {status:'success',message:'hello',location: @category} ,status: :ok
       end
+
       def create
-        category = Category.create(category_params)
+        puts "This is the param", params["name"]
+        category = Category.create(name: params["name"])
         if category.save
           render json: {status:'success',message:'Saved Category',data: category} ,status: :ok
         else
@@ -29,7 +31,7 @@ module Api
         render json: {status:'success',message:'Deleted Category',data: @category} ,status: :ok
       end
       def update
-        if @category.update(category_params)
+        if @category.update(name:category_params)
           render json: {status:'success',message:'Updated Category',data: @category} ,status: :ok
         else
           render json: {status:'Error',message:'Cannot updated category',data: @category.errors} ,status: :unprocessable_entity
@@ -40,7 +42,8 @@ module Api
         @category = Category.find(params[:id])
       end
       def category_params
-        params.require(:category).permit(:name)
+        # params[:name]
+        params[:name]
       end
     end
 
